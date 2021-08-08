@@ -1,19 +1,22 @@
-shifts(danny,3,7).
-shifts(jef, 2, 2).
-shifts(ann, 2, 4).
+distance(heverlee, leuven-city-center, 10).
+distance(leuven-station, leuven-city-center, 8).
+distance(a, b, 2).
+distance(c, b, 4).
 
-create_range(Min1, Max1, Min2, Max2, Range1, Range2):-
-	range(Min1, Max1, Range1),
-	range(Min2, Max2, Range2).
-	
-check(Range1, Range2):-
-	 
-	
+stop(heverlee, 4).
+stop(leuven-station, 10).
+stop(leuven-city-center, 10).
+stop(a, 1).
+stop(c, 1).
 
-possible(Worker1, Worker2):-
-	shifts(Worker1, Min1, Max1),
-	shifts(Worker2, Min2, Max2),
-	create_range(Min1, Max1, Min2 , Max2, Range1, Range2),
-	
-	check(Range1, Range2),
-	write('Possible').
+dist(A, B, Dist):- distance(A, B, Dist).
+dist(A, B, Dist):- distance(B, A, Dist).
+
+costBus(Final, Final, Path, [Final|Path], 0).
+costBus(Initial, Final, Path, Sol, Distance):- 
+    dist(Initial, Node, DistanceNode),
+    \+ member(Node, Path),
+    costBus(Node, Final, [Initial|Path], Sol, PartialDistance),
+    Distance is PartialDistance + DistanceNode.
+
+% ?- costBus(leuven-station, heverlee, [], Sol, Distance)
