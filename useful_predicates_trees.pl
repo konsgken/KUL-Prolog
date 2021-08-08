@@ -49,6 +49,12 @@ atlevel(t(L,_,R),D,S) :- D > 1, D1 is D-1,
 depth(nil, 0).
 depth(t(L, _V, R), Depth):- depth(L, DL), depth(R, DR), D1 is max(DL, DR), Depth is D1 + 1.
 
+sumtree(nil, 0).
+sumtree(t(L, V, R), Sum):- sumtree(L, LSum), sumtree(R, RSum), Sum is RSum + LSum + V.
+
+is_balanced(nil).
+is_balanced(t(L, _V, R)):- depth(L, DL), depth(R, DR),  (DL - DR =< 1; DR -DL = 1), is_balanced(L), is_balanced(R).
+
 intree(El, t(_, El, _)).
 intree(El, t(L, _, _)):- intree(El, L).
 intree(El, t(_, _, R)):- intree(El, R).
