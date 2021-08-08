@@ -49,6 +49,10 @@ atlevel(t(L,_,R),D,S) :- D > 1, D1 is D-1,
 depth(nil, 0).
 depth(t(L, _V, R), Depth):- depth(L, DL), depth(R, DR), D1 is max(DL, DR), Depth is D1 + 1.
 
+intree(El, t(_, El, _)).
+intree(El, t(L, _, _)):- intree(El, L).
+intree(El, t(_, _, R)):- intree(El, R).
+
 flatten([],[]).
 flatten(X, [X]):- atomic(X), X\==[].
 flatten([H|T], L3) :- flatten(H, L1), flatten(T, L2), append(L1, L2, L3).
