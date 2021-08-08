@@ -78,3 +78,12 @@ before(X,Y,L):-append(_,[X|T],L),member(Y,T).
 
 bet(X, Y, L):- X=L.
 bet(X, Y, L):- X < Y, NewX is X + 1, bet(NewX, Y, L).
+
+% pack predicate
+pack([], []).
+pack(List, [H2|T2]):- transfer(List, H2, Remaining), pack(Remaining, T2).
+    
+contains(_, []).
+contains(X, [X|T]):- contains(X, T).
+
+transfer([X|T], R1, R2):- append(R1, R2, [X|T]), R1=[_|_], contains(X, R1), \+ member(X, R2).
