@@ -58,8 +58,23 @@ split(L, N, [DL|DLTail]):-
     gappend(DL, LTail, L),
     split(LTail, N , DLTail),!.
 
-range(High, High,[High]):-!.
-range(Low, High, [Head|Tail]):-
-    Head =Low,
-    NewLow is Low + 1,
-    range(NewLow, High, Tail).
+range(High, High, [High]).
+range(Low, High, [Low|T]):- Low < High, NewLow is Low + 1, range(NewLow, High, T).
+
+nextto1(X, Y, [X,Y|_]).
+nextto1(X, Y, [_|Zs]) :-
+    nextto(X, Y, Zs).
+near(X, Y, List):- nextto1(X, Y, List) ; nextto1(Y, X, List).
+
+intersection1([],_M,[]).
+intersection1([X|Y], M, [X|Z]):- member(X, M), intersection1(Y, M, Z).
+intersection1([X|Y], M, Z):- not(member(X, M)), intersection1(Y, M ,Z).
+
+union1([], Z, Z).
+union1([X|Y], M, Z):-  member(X, M), union1(Y, M ,Z).
+union1([X|Y], M, [X|Z]):- not(member(X, M)), union1(Y, M, Z).
+
+before(X,Y,L):-append(_,[X|T],L),member(Y,T).
+
+bet(X, Y, L):- X=L.
+bet(X, Y, L):- X < Y, NewX is X + 1, bet(NewX, Y, L).
