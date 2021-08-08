@@ -1,50 +1,14 @@
-% Facts
-worker(danny,3,7).
-worker(jeff,2,2).
-worker(ann,2,4).
+shifts(danny, 3, 7).
+shifts(jef, 2, 2).
+shifts(ann, 2, 4).
 
-member(X,[X|_T]).
-member(X,[_|T]):- member(X,T).
+bet(X, _Y, El):- X=El.
+bet(X, Y, El):- X<Y, NewX is X + 1, bet(NewX, Y, El).
 
-range(High, High, [High]):-!.
-range(Low, High, [Head|Tail]):-
-    Head = Low,
-    NewLow is Low + 1,
-    range(NewLow,High, Tail).
-
-create_range(Min1,Max1,Min2,Max2, R1, R2):-
-    range(Min1, Max1, R1),
-    range(Min2, Max2, R2).
-    
-check(NumberOfShifts,Range1,Range2):-
-	Res is NumberOfShifts//2,
-	M is Res,
-	P is NumberOfShifts-Res,
-    member(M,Range1),
-    member(P,Range2).
-check(NumberOfShifts,Range1,Range2):-
-	Res is NumberOfShifts//2,
-	M is Res,
-	P is NumberOfShifts-Res,
-    member(M,Range2),
-    member(P,Range1).
-
-
-possible_facts(Name1,Name2,NumberOfShifts):-
-    worker(Name1,MinShiftsWorker1,MaxShiftsWorker1),
-    worker(Name2,MinShiftsWorker2,MaxShiftsWorker2),
-    create_range(MinShiftsWorker1,MaxShiftsWorker1,MinShiftsWorker2,MaxShiftsWorker2,Range1,Range2),
-    check(NumberOfShifts,Range1,Range2),!, 
-    write('Possible').
-% possible_facts predicate:- Checks if a Sequence of Shift is possible between two workers.
-% possible_facts(danny, ann, 6).
-
-% possible_terms predicate:- Checks if a Sequence of Shift is possible between two workers.
-% possible_terms([worker(danny,3,7),worker(jeff,2,2),worker(ann,2,4)],jeff,ann,4).
-
-possible_terms(WorkerList,Name1,Name2,NumberOfShifts):-
-    member(worker(Name1,MinShiftsWorker1,MaxShiftsWorker1), WorkerList),
-    member(worker(Name2,MinShiftsWorker2,MaxShiftsWorker2), WorkerList),
-    create_range(MinShiftsWorker1,MaxShiftsWorker1,MinShiftsWorker2,MaxShiftsWorker2,Range1,Range2),
-    check(NumberOfShifts,Range1,Range2),!, 
-    write('Possible').
+possible(Worker1, Worker2, NumberShifts, ShiftsWorker1, ShiftsWorker2):- 
+    shifts(Worker1, MinWorker1, MaxWorker1),
+    shifts(Worker2, MinWorker2, MaxWorker2), 
+    bet(MinWorker1, MaxWorker1, ShiftsWorker1),
+    bet(MinWorker2, MaxWorker2, ShiftsWorker2),
+    NumberShifts is ShiftsWorker1 + ShiftsWorker2,
+    ((ShiftsWorker1 - ShiftsWorker2 =< 1, ShiftsWorker1 - ShiftsWorker2 >=0 ); (ShiftsWorker2 - ShiftsWorker1 =< 1, ShiftsWorker2 - ShiftsWorker1 >= 0)), !.
