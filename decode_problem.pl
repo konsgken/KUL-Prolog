@@ -5,7 +5,7 @@ prefix(Prefix, [HCodes|TCodes], [HCodes|TRestCodes]):- \+ pref(Prefix, HCodes), 
 prefix(Prefix, [HCodes|TCodes], TRestCodes):-  pref(Prefix, HCodes), prefix(Prefix, TCodes, TRestCodes).
 
 acceptableCode(_, []).
-acceptableCode(Codes, [HCodesSoFaR|TCodesSoFaR]):-  \+ pref(Codes, HCodesSoFaR), acceptableCode(Codes, TCodesSoFaR).
+acceptableCode(Codes, [HCodesSoFaR|TCodesSoFaR]):-  \+ pref(Codes, HCodesSoFaR), \+ pref(HCodesSoFaR, Codes), acceptableCode(Codes, TCodesSoFaR).
 
 generate(1, Codes, [Codes]).
 generate(N, Codes, [HRes|TRes]):-
@@ -21,6 +21,4 @@ check_prefix([HRes|TRes]):- acceptableCode(HRes, TRes), check_prefix(TRes).
 
 decode(N, Codes, Res):-
     generate(N, Codes, Res),
-    check_prefix(Res),
-    reverse(Res, Res2),
-    check_prefix(Res2).
+    check_prefix(Res).
