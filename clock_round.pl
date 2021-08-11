@@ -1,19 +1,11 @@
-:- use_module(library(clpfd)).
-clock_round(N,Sum, Xs):-
-    listlength(Xs_temp, N),
-    Xs_temp ins 1..N,
-    all_different(Xs_temp),
-    subarray(Xs_temp, Sum),
-    findall(Xs_temp, labeling([], Xs_temp), Xs).
+:- use_module(library(clpfd)). 
+clock_round(N, Sum, Xs):-
+    length(Xs, N),
+    Xs ins 1..N,
+    all_different(Xs),
+    check(Xs, Sum), labeling([], Xs).
 
-listlength([], 0).
-listlength([_|Tail], Count):-
-    listlength(Tail, PartialCount),
-    Count is PartialCount + 1.
-
-
-subarray([El1,El2,El3|[]], Sum):-
-    El1+El2+El3#<Sum.
-subarray([El1,El2,El3|Tail], Sum):-
-    El1+El2+El3 #<Sum,
-    subarray([El2,El3|Tail], Sum), !.
+check([_H1, _H2], _).
+check([H1, H2, H3|T], Sum):-
+    H1 + H2 + H3 #< Sum,
+    check([H2, H3|T], Sum).
